@@ -1,10 +1,10 @@
 === WordPress for My Clients ===
-Contributors: hchouhan, dreamsonline, dreamsmedia
-Donate link: http://www.dreamsonline.net
+Contributors: hchouhan, themeist, dreamsmedia
+Donate link: http://themeist.co
 Tags: login logo, favicon, customize, login, apple touch, apple touch icon, upload, wordpress, admin, minimum, dashboad, cms, hide
 Stable tag: 3.1.1
 Requires at least: 3.5
-Tested up to: 3.9.2
+Tested up to: 4.2.2
 Last Updated: 2014-SEP-01
 Plugin Name: WordPress for My Clients
 Plugin URI: http://www.dreamsonline.net/wordpress-plugins/wordpress-for-my-clients/
