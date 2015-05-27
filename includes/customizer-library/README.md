@@ -30,22 +30,86 @@ The Customizer Library currently supports these options:
 * Select
 * Radio
 * Upload
+* Image
 * Color
+* Text
+* URL
+* Range
 * Textarea
 * Select (Typography)
 
 ### Sections
 
+Sections are convenient ways to group controls in the customizer.
+
 Customizer Sections can be defined like this:
 
 ~~~php
 // Example Section
-$section = 'example';
+
+$sections[] = array(
+	'id' => 'example', // Required
+	'title' => __( 'Example Section', 'textdomain' ), // Required
+	'priority' => '30', // Optional
+	'description' => 'Example description', // Optional
+	'panel' => 'panel_id' // optional, and it requires WP >= 4.0
+);
+~~~
+
+### Panels
+
+Panels are a convenient way to group your different sections.
+
+Here's an example that adds a panel, a section to the panel, and then a text option to that section:
+
+~~~php
+// Panel Example
+$panel = 'panel';
+
+$panels[] = array(
+	'id' => $panel,
+	'title' => __( 'Panel Examples', 'demo' ),
+	'priority' => '100'
+);
+
+$section = 'panel-section';
 
 $sections[] = array(
 	'id' => $section,
-	'title' => __( 'Example Section', 'textdomain' ),
-	'priority' => '30'
+	'title' => __( 'Panel Section', 'demo' ),
+	'priority' => '10',
+	'panel' => $panel
+);
+
+$options['example-panel-text'] = array(
+	'id' => 'example-panel-text',
+	'label'   => __( 'Example Text Input', 'demo' ),
+	'section' => $section,
+	'type'    => 'text',
+);
+~~~
+
+The Customizer_Library uses the core function `$wp_customize->add_panel( $id, $args );` to add panels, and all the same $args are available. See [codex](https://developer.wordpress.org/reference/classes/wp_customize_manager/add_panel/).
+
+### Text
+
+~~~php
+$options['example-text'] = array(
+	'id' => 'example-text',
+	'label'   => __( 'Example Text Input', 'textdomain' ),
+	'section' => $section,
+	'type'    => 'text',
+);
+~~~
+
+### URL
+
+~~~php
+$options['example-url'] = array(
+	'id' => 'example-url',
+	'label'   => __( 'Example URL Input', 'textdomain' ),
+	'section' => $section,
+	'type'    => 'url',
 );
 ~~~
 
@@ -77,6 +141,17 @@ $options['example-select'] = array(
 	'type'    => 'select',
 	'choices' => $choices,
 	'default' => 'choice-1'
+);
+~~~
+
+### Drop Down Pages
+
+$options['example-dropdown-pages'] = array(
+	'id' => 'example-dropdown-pages',
+	'label'   => __( 'Example Drop Down Pages', 'textdomain' ),
+	'section' => $section,
+	'type'    => 'dropdown-pages',
+	'default' => ''
 );
 ~~~
 
@@ -149,6 +224,23 @@ $options['example-font'] = array(
 );
 ~~~
 
+### Range
+
+~~~php
+$options['example-range'] = array(
+	'id' => 'example-range',
+	'label'   => __( 'Example Range Input', 'demo' ),
+	'section' => $section,
+	'type'    => 'range',
+	'input_attrs' => array(
+        'min'   => 0,
+        'max'   => 10,
+        'step'  => 1,
+        'style' => 'color: #0a0',
+	)
+);
+~~~
+
 ### Pass $options to Customizer Library
 
 After all the options and sections are defined, load them with the Customizer Library:
@@ -182,6 +274,31 @@ Customizer_Library_Styles()->add( array(
 	)
 ) );
 ~~~
+
+#### Media Queries
+
+Media queries can also be be used with Customizer_Library_Styles.  Here's an example for outputting logo-image-2x on high resolution devices.
+
+~~~php
+$setting = 'logo-image-2x';
+$mod = get_theme_mod( $setting, false );
+
+if ( $mod ) {
+
+	Customizer_Library_Styles()->add( array(
+		'selectors' => array(
+			'.logo'
+		),
+		'declarations' => array(
+			'background-image' => 'url(' . $mod . ')'
+		),
+		'media' => '(-webkit-min-device-pixel-ratio: 1.3),(-o-min-device-pixel-ratio: 2.6/2),(min--moz-device-pixel-ratio: 1.3),(min-device-pixel-ratio: 1.3),(min-resolution: 1.3dppx)'
+	) );
+
+}
+~~~
+
+
 
 ## Fonts
 
@@ -227,7 +344,30 @@ if ( $mod != customizer_library_get_default( $setting ) ) {
 }
 ~~~
 
-## Changelog
+## Change Log
+
+1.3.0
+===
+
+* Enhancement: Add text input option
+* Enhancement: Sort system fonts and webfonts within dropdown
+* Enhancement: Add Panels Support, from WP 4.0
+* Enhancement: Add support for "url" type
+* Enhancement: Add support for "range" type
+* Enhancement: Add support for "dropdown-pages" type
+* Update: Change how setting parameters are added
+
+1.2.0
+===
+
+* Enhancement: Allow setting parameters
+* Update: Refactor interface loop
+
+1.1.0
+===
+
+* Bugfix: customizer.js enqueue relative to library
+* Enhancement: Use new textarea control from core
 
 1.0.0
 ===
